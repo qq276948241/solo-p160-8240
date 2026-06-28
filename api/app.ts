@@ -3,6 +3,7 @@ import express, {
   type Response,
   type NextFunction,
 } from 'express'
+import multer from 'multer'
 import cors from 'cors'
 import path from 'path'
 import dotenv from 'dotenv'
@@ -20,8 +21,11 @@ dotenv.config()
 const app: express.Application = express()
 
 app.use(cors())
-app.use(express.json({ limit: '10mb' }))
-app.use(express.urlencoded({ extended: true, limit: '10mb' }))
+app.use(express.json({ limit: '2mb' }))
+app.use(express.urlencoded({ extended: true, limit: '2mb' }))
+
+const UPLOAD_DIR = path.join(__dirname, '..', 'public', 'uploads')
+app.use('/uploads', express.static(UPLOAD_DIR))
 
 app.use('/api/users', userRoutes)
 app.use('/api/books', bookRoutes)
@@ -39,6 +43,27 @@ app.use(
 )
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+  if (error instanceof multer.MulterError) {
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      res.status(400).json({
+        success: false,
+        message: '图片不能超过 2MB',
+      })
+      return
+    }
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    })
+    return
+  }
+  if (error.message && error.message.includes('只允许上传')) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    })
+    return
+  }
   res.status(500).json({
     success: false,
     error: 'Server internal error',

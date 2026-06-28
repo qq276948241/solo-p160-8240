@@ -6,6 +6,12 @@ const router = Router()
 
 router.get('/check', (req: Request, res: Response) => {
   const { userId, bookId } = req.query
+  if (!userId || !bookId) {
+    return res.json({
+      success: false,
+      message: '缺少 userId 或 bookId',
+    } as ApiResponse<null>)
+  }
   const favorites = favoriteStorage.readAll()
   const exists = favorites.some(f => f.userId === userId && f.bookId === bookId)
 
@@ -17,6 +23,13 @@ router.get('/check', (req: Request, res: Response) => {
 
 router.post('/', (req: Request, res: Response) => {
   const { userId, bookId } = req.body
+  if (!userId || !bookId) {
+    return res.json({
+      success: false,
+      message: '缺少 userId 或 bookId',
+    } as ApiResponse<null>)
+  }
+
   const favorites = favoriteStorage.readAll()
 
   const exists = favorites.find(f => f.userId === userId && f.bookId === bookId)
@@ -43,8 +56,8 @@ router.post('/', (req: Request, res: Response) => {
   } as ApiResponse<null>)
 })
 
-router.delete('/', (req: Request, res: Response) => {
-  const { userId, bookId } = req.body
+router.delete('/:userId/:bookId', (req: Request, res: Response) => {
+  const { userId, bookId } = req.params
   const favorites = favoriteStorage.readAll()
   const index = favorites.findIndex(f => f.userId === userId && f.bookId === bookId)
 

@@ -30,11 +30,18 @@ router.get('/book/:bookId', (req: Request, res: Response) => {
 router.post('/', (req: Request, res: Response) => {
   const { userId, bookId, content } = req.body
 
+  if (!userId || !bookId || !content || !String(content).trim()) {
+    return res.json({
+      success: false,
+      message: '请填写留言内容',
+    } as ApiResponse<null>)
+  }
+
   const newMsg: Message = {
     id: generateId('msg'),
     userId,
     bookId,
-    content,
+    content: String(content).trim(),
     createdAt: new Date().toISOString(),
   }
 

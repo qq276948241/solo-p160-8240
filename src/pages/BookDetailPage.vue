@@ -66,10 +66,7 @@ async function toggleFavorite() {
     return
   }
   if (isFavorited.value) {
-    const res = await del('/api/favorites', {
-      userId: currentUser.value?.id,
-      bookId: bookId.value,
-    })
+    const res = await del(`/api/favorites/${currentUser.value?.id}/${bookId.value}`)
     if (res.success) isFavorited.value = false
   } else {
     const res = await post('/api/favorites', {
