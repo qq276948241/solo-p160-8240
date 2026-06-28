@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: '"PingFang SC"', '"Microsoft YaHei"', '"Noto Sans SC"', system-ui, sans-serif;
+  background-color: #FFFAF7;
+  color: #2D3748;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-500 text-white px-6 py-2.5 rounded-xl font-medium transition-all duration-200 hover:bg-primary-600 hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline {
+    @apply border-2 border-primary-500 text-primary-500 px-6 py-2.5 rounded-xl font-medium transition-all duration-200 hover:bg-primary-50 active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:bg-gray-100 active:scale-95;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden;
+  }
+
+  .tag {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+  }
+
+  .tag-free {
+    @apply tag bg-green-100 text-green-700;
+  }
+
+  .tag-paid {
+    @apply tag bg-primary-100 text-primary-700;
+  }
+
+  .tag-age {
+    @apply tag bg-blue-100 text-blue-700;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+  }
+}

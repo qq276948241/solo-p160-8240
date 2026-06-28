@@ -1,0 +1,23 @@
+[
+  {
+    "id": "msg_001",
+    "userId": "user_002",
+    "bookId": "book_001",
+    "content": "请问这本绘本还在吗？我想领，可以自提~",
+    "createdAt": "2026-06-16T11:00:00Z"
+  },
+  {
+    "id": "msg_002",
+    "userId": "user_001",
+    "bookId": "book_001",
+    "content": "在的，欢迎来拿。我住3号楼2单元。",
+    "createdAt": "2026-06-16T11:30:00Z"
+  },
+  {
+    "id": "msg_003",
+    "userId": "user_003",
+    "bookId": "book_004",
+    "content": "价格可以商量吗？15行吗？",
+    "createdAt": "2026-06-17T09:00:00Z"
+  }
+]

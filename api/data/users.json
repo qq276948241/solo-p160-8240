@@ -1,0 +1,26 @@
+[
+  {
+    "id": "user_001",
+    "username": "parent1",
+    "password": "123456",
+    "nickname": "小明妈妈",
+    "phone": "13800138001",
+    "createdAt": "2026-06-01T10:00:00Z"
+  },
+  {
+    "id": "user_002",
+    "username": "parent2",
+    "password": "123456",
+    "nickname": "小红爸爸",
+    "phone": "13800138002",
+    "createdAt": "2026-06-02T10:00:00Z"
+  },
+  {
+    "id": "user_003",
+    "username": "parent3",
+    "password": "123456",
+    "nickname": "朵朵奶奶",
+    "phone": "13800138003",
+    "createdAt": "2026-06-03T10:00:00Z"
+  }
+]

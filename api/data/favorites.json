@@ -1,0 +1,14 @@
+[
+  {
+    "id": "fav_001",
+    "userId": "user_002",
+    "bookId": "book_001",
+    "createdAt": "2026-06-15T10:00:00Z"
+  },
+  {
+    "id": "fav_002",
+    "userId": "user_001",
+    "bookId": "book_004",
+    "createdAt": "2026-06-16T10:00:00Z"
+  }
+]
