@@ -19,6 +19,7 @@ export interface Book {
   isFree: boolean
   description: string
   condition: string
+  cover: string
   images: string[]
   sellerId: string
   createdAt: string

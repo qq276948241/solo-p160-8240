@@ -24,8 +24,8 @@ function formatAge(group: string) {
   <div class="card group cursor-pointer animate-fade-in" @click="goDetail">
     <div class="relative aspect-square overflow-hidden bg-gray-100">
       <img
-        v-if="book.images?.[0]"
-        :src="book.images[0]"
+        v-if="book.cover || book.images?.[0]"
+        :src="book.cover || book.images[0]"
         :alt="book.title"
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
       />

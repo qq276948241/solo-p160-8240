@@ -9,6 +9,7 @@
     "isFree": true,
     "description": "很新的绘本，孩子已经看过了，免费送给需要的家长。洞洞书设计，宝宝很喜欢用手指戳洞洞。",
     "condition": "九成新",
+    "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20the%20very%20hungry%20caterpillar%20colorful%20illustration&image_size=square",
     "images": [
       "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20the%20very%20hungry%20caterpillar%20colorful%20illustration&image_size=square"
     ],
@@ -25,6 +26,7 @@
     "isFree": false,
     "description": "经典绘本，描绘爸爸的各种形象，孩子非常喜欢。内页干净无涂画。",
     "condition": "八成新",
+    "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20my%20dad%20anthony%20browne%20style%20warm%20family%20illustration&image_size=square",
     "images": [
       "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20my%20dad%20anthony%20browne%20style%20warm%20family%20illustration&image_size=square"
     ],
@@ -41,6 +43,7 @@
     "isFree": true,
     "description": "温馨的亲子共读绘本，大兔子和小兔子的故事。送给有缘人，希望孩子喜欢。",
     "condition": "九成新",
+    "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20guess%20how%20much%20i%20love%20you%20bunny%20rabbits%20warm%20illustration&image_size=square",
     "images": [
       "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20guess%20how%20much%20i%20love%20you%20bunny%20rabbits%20warm%20illustration&image_size=square"
     ],
@@ -57,6 +60,7 @@
     "isFree": false,
     "description": "科普绘本，卷毛老师带孩子们探索水的循环。知识丰富，适合小学低年级孩子阅读。",
     "condition": "九成新",
+    "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20magic%20school%20bus%20science%20water%20cycle%20colorful&image_size=square",
     "images": [
       "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20magic%20school%20bus%20science%20water%20cycle%20colorful&image_size=square"
     ],
@@ -73,6 +77,7 @@
     "isFree": false,
     "description": "立体翻翻书，一套共6册，孩子超爱的小鸡球球形象。全套出售，不单卖。",
     "condition": "八成新",
+    "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20cute%20baby%20chick%20ball%20japanese%20style%20soft%20illustration&image_size=square",
     "images": [
       "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20cute%20baby%20chick%20ball%20japanese%20style%20soft%20illustration&image_size=square"
     ],
@@ -89,6 +94,7 @@
     "isFree": true,
     "description": "淘气包大卫的故事，每个家庭都能找到共鸣。免费送，书角有轻微磨损。",
     "condition": "七成新",
+    "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20no%20david%20naughty%20boy%20cartoon%20humor&image_size=square",
     "images": [
       "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20no%20david%20naughty%20boy%20cartoon%20humor&image_size=square"
     ],
@@ -105,6 +111,7 @@
     "isFree": false,
     "description": "儿童文学经典，小猪威尔伯和蜘蛛夏洛的友谊故事。文字较多，适合有阅读基础的孩子。",
     "condition": "九成新",
+    "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20book%20cover%20charlotte%20web%20spider%20pig%20friendship%20farm%20story&image_size=square",
     "images": [
       "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20book%20cover%20charlotte%20web%20spider%20pig%20friendship%20farm%20story&image_size=square"
     ],
@@ -121,6 +128,7 @@
     "isFree": true,
     "description": "低幼绘本，几乎全是图画，只有抱抱两个字。小宝宝非常喜欢，免费送。",
     "condition": "八成新",
+    "cover": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20hug%20baby%20animals%20elephant%20monkey%20warm%20cute&image_size=square",
     "images": [
       "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=children%20picture%20book%20cover%20hug%20baby%20animals%20elephant%20monkey%20warm%20cute&image_size=square"
     ],

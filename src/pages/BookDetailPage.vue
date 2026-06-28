@@ -126,8 +126,8 @@ onMounted(() => {
           <div class="card !rounded-3xl overflow-hidden">
             <div class="aspect-square bg-gray-100 relative">
               <img
-                v-if="book.images?.[0]"
-                :src="book.images[0]"
+                v-if="book.cover || book.images?.[0]"
+                :src="book.cover || book.images[0]"
                 :alt="book.title"
                 class="w-full h-full object-cover"
               />

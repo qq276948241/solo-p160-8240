@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { post } from '@/utils/request'
 import { useAuth } from '@/composables/useAuth'
-import type { AgeGroup, Book } from '../../shared/index.js'
-import { Upload, BookOpen, ArrowLeft } from 'lucide-vue-next'
+import type { AgeGroup, Book, ApiResponse } from '../../shared/index.js'
+import { Upload, BookOpen, ArrowLeft, X, ImagePlus } from 'lucide-vue-next'
 
 const router = useRouter()
 const { currentUser } = useAuth()
@@ -17,8 +16,8 @@ const isFree = ref(true)
 const price = ref<number>(0)
 const condition = ref('九成新')
 const description = ref('')
-const images = ref<string[]>([])
-const imageUrl = ref('')
+const coverFile = ref<File | null>(null)
+const coverPreview = ref('')
 const loading = ref(false)
 const errorMsg = ref('')
 
@@ -30,15 +29,35 @@ const ageOptions: { value: AgeGroup; label: string }[] = [
 ]
 const conditions = ['全新', '九成新', '八成新', '七成新', '有磨损']
 
-function addImage() {
-  if (imageUrl.value.trim()) {
-    images.value.push(imageUrl.value.trim())
-    imageUrl.value = ''
+function handleCoverChange(e: Event) {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+
+  const allowed = ['image/jpeg', 'image/jpg', 'image/png']
+  if (!allowed.includes(file.type)) {
+    errorMsg.value = '只支持 JPG/JPEG/PNG 格式'
+    return
   }
+  if (file.size > 2 * 1024 * 1024) {
+    errorMsg.value = '图片不能超过 2MB'
+    return
+  }
+  errorMsg.value = ''
+  coverFile.value = file
+
+  const reader = new FileReader()
+  reader.onload = (ev) => {
+    coverPreview.value = ev.target?.result as string
+  }
+  reader.readAsDataURL(file)
 }
 
-function removeImage(idx: number) {
-  images.value.splice(idx, 1)
+function removeCover() {
+  coverFile.value = null
+  coverPreview.value = ''
+  const input = document.getElementById('cover-input') as HTMLInputElement | null
+  if (input) input.value = ''
 }
 
 async function handleSubmit() {
@@ -50,26 +69,38 @@ async function handleSubmit() {
     errorMsg.value = '请输入正确的价格'
     return
   }
+
   loading.value = true
   errorMsg.value = ''
+
   try {
-    const res = await post<Book>('/api/books', {
-      title: title.value,
-      author: author.value,
-      category: category.value,
-      ageGroup: ageGroup.value,
-      isFree: isFree.value,
-      price: isFree.value ? 0 : price.value,
-      condition: condition.value,
-      description: description.value,
-      images: images.value,
-      sellerId: currentUser.value?.id,
-    })
-    if (res.success && res.data) {
-      router.push(`/book/${res.data.id}`)
-    } else {
-      errorMsg.value = res.message || '发布失败'
+    const formData = new FormData()
+    formData.append('title', title.value)
+    formData.append('author', author.value)
+    formData.append('category', category.value)
+    formData.append('ageGroup', ageGroup.value)
+    formData.append('isFree', String(isFree.value))
+    formData.append('price', String(isFree.value ? 0 : price.value))
+    formData.append('condition', condition.value)
+    formData.append('description', description.value)
+    formData.append('sellerId', currentUser.value?.id || '')
+    if (coverFile.value) {
+      formData.append('cover', coverFile.value)
     }
+
+    const res = await fetch('/api/books', {
+      method: 'POST',
+      body: formData,
+    })
+    const result = (await res.json()) as ApiResponse<Book>
+
+    if (result.success && result.data) {
+      router.push(`/book/${result.data.id}`)
+    } else {
+      errorMsg.value = result.message || '发布失败'
+    }
+  } catch (err) {
+    errorMsg.value = (err as Error)?.message || '上传失败，请检查图片格式和大小'
   } finally {
     loading.value = false
   }
@@ -93,6 +124,39 @@ async function handleSubmit() {
 
     <div class="card p-6 sm:p-8 !rounded-3xl">
       <div class="space-y-5">
+        <div>
+          <label class="form-label">封面图 <span class="text-xs text-gray-400 ml-1">支持 JPG/PNG，≤ 2MB</span></label>
+          <div
+            v-if="!coverPreview"
+            class="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center cursor-pointer hover:border-primary-400 hover:bg-primary-50/30 transition-all"
+          >
+            <input
+              id="cover-input"
+              type="file"
+              accept="image/jpeg,image/jpg,image/png"
+              class="hidden"
+              @change="handleCoverChange"
+            />
+            <label for="cover-input" class="cursor-pointer flex flex-col items-center gap-2">
+              <div class="w-14 h-14 rounded-xl bg-gray-100 flex items-center justify-center">
+                <ImagePlus class="w-7 h-7 text-gray-400" />
+              </div>
+              <p class="text-sm text-gray-600 font-medium">点击选择封面图片</p>
+              <p class="text-xs text-gray-400">有图才有点击量，建议上传真实封面~</p>
+            </label>
+          </div>
+          <div v-else class="relative rounded-2xl overflow-hidden border border-gray-200">
+            <img :src="coverPreview" alt="封面预览" class="w-full max-h-80 object-contain bg-gray-50" />
+            <button
+              type="button"
+              @click="removeCover"
+              class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+            >
+              <X class="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
         <div>
           <label class="form-label">绘本标题 <span class="text-red-400">*</span></label>
           <input
@@ -191,47 +255,11 @@ async function handleSubmit() {
         </div>
 
         <div>
-          <label class="form-label">图片链接</label>
-          <div class="flex gap-2">
-            <input
-              v-model="imageUrl"
-              type="text"
-              placeholder="粘贴图片URL，按添加按钮加入"
-              class="input-field flex-1"
-              @keydown.enter.prevent="addImage"
-            />
-            <button
-              type="button"
-              @click="addImage"
-              class="btn-outline !px-4"
-            >
-              <Upload class="w-5 h-5" />
-            </button>
-          </div>
-          <div v-if="images.length > 0" class="grid grid-cols-4 gap-2 mt-3">
-            <div
-              v-for="(img, idx) in images"
-              :key="idx"
-              class="aspect-square rounded-xl overflow-hidden bg-gray-100 relative group"
-            >
-              <img :src="img" class="w-full h-full object-cover" />
-              <button
-                type="button"
-                @click="removeImage(idx)"
-                class="absolute inset-0 bg-black/50 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                移除
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div>
           <label class="form-label">绘本描述 <span class="text-red-400">*</span></label>
           <textarea
             v-model="description"
             rows="4"
-            placeholder="介绍一下绘本的内容、使用情况等..."
+            placeholder="介绍一下绘本的内容、使用情况、自提方式等..."
             class="input-field resize-none"
           ></textarea>
         </div>
@@ -243,8 +271,9 @@ async function handleSubmit() {
         <button
           @click="handleSubmit"
           :disabled="loading"
-          class="btn-primary w-full !py-3 text-base"
+          class="btn-primary w-full !py-3 text-base flex items-center justify-center gap-2"
         >
+          <Upload v-if="!loading" class="w-5 h-5" />
           {{ loading ? '发布中...' : '发布绘本' }}
         </button>
       </div>
