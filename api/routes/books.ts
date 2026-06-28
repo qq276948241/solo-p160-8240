@@ -1,43 +1,7 @@
 import { Router, type Request, type Response } from 'express'
-import multer from 'multer'
-import path from 'path'
-import fs from 'fs'
-import { fileURLToPath } from 'url'
-import type { Book, ApiResponse, AgeGroup } from '../../shared/index.js'
+import type { Book, ApiResponse, AgeGroup, CreateBookRequest } from '../../shared/index.js'
 import { bookStorage, userStorage, generateId } from '../utils/storage.js'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-const UPLOAD_DIR = path.join(__dirname, '..', '..', 'public', 'uploads')
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true })
-}
-
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, UPLOAD_DIR)
-  },
-  filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase()
-    cb(null, `cover_${Date.now()}_${Math.random().toString(36).slice(2, 8)}${ext}`)
-  },
-})
-
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 2 * 1024 * 1024,
-  },
-  fileFilter: (_req, file, cb) => {
-    const allowed = ['image/jpeg', 'image/jpg', 'image/png']
-    if (allowed.includes(file.mimetype)) {
-      cb(null, true)
-    } else {
-      cb(new Error('只允许上传 JPG/JPEG/PNG 格式图片，且不超过 2MB'))
-    }
-  },
-})
+import { coverUpload, deleteCoverFile } from '../utils/upload.js'
 
 const router = Router()
 
@@ -104,34 +68,32 @@ router.get('/:id', (req: Request, res: Response) => {
   } as ApiResponse<Book & { seller: Omit<typeof seller, 'password'> }>)
 })
 
-router.post('/', upload.single('cover'), (req: Request, res: Response) => {
-  const { title, author, category, ageGroup, price, isFree, description, condition, sellerId } = req.body
+router.post('/', coverUpload.single('cover'), (req: Request, res: Response) => {
+  const body = req.body as CreateBookRequest
 
-  if (!title || !author || !description || !sellerId) {
+  if (!body.title || !body.author || !body.description || !body.sellerId) {
     return res.json({
       success: false,
       message: '请填写必要字段',
     } as ApiResponse<null>)
   }
 
-  let cover = ''
-  if (req.file) {
-    cover = `/uploads/${req.file.filename}`
-  }
+  const isFree = body.isFree === true || body.isFree === 'true'
+  const cover = req.file ? `/uploads/${req.file.filename}` : ''
 
   const newBook: Book = {
     id: generateId('book'),
-    title,
-    author,
-    category: category || '其他',
-    ageGroup,
-    price: isFree === 'true' || isFree === true ? 0 : Number(price) || 0,
-    isFree: isFree === 'true' || isFree === true,
-    description,
-    condition: condition || '九成新',
+    title: body.title,
+    author: body.author,
+    category: body.category || '其他',
+    ageGroup: body.ageGroup,
+    price: isFree ? 0 : Number(body.price) || 0,
+    isFree,
+    description: body.description,
+    condition: body.condition || '九成新',
     cover,
     images: cover ? [cover] : [],
-    sellerId,
+    sellerId: body.sellerId,
     createdAt: new Date().toISOString(),
   }
 
@@ -161,12 +123,7 @@ router.delete('/:id', (req: Request, res: Response) => {
   books.splice(index, 1)
   bookStorage.writeAll(books)
 
-  if (deleted.cover) {
-    const coverPath = path.join(UPLOAD_DIR, path.basename(deleted.cover))
-    if (fs.existsSync(coverPath)) {
-      try { fs.unlinkSync(coverPath) } catch (_) { /* ignore */ }
-    }
-  }
+  deleteCoverFile(deleted.cover)
 
   res.json({
     success: true,

@@ -53,3 +53,21 @@ export interface BookWithSeller extends Book {
 export interface MessageWithUser extends Message {
   user: Omit<User, 'password'>
 }
+
+export interface CreateBookRequest {
+  title: string
+  author: string
+  category: string
+  ageGroup: AgeGroup
+  price: number | string
+  isFree: boolean | string
+  description: string
+  condition: string
+  sellerId: string
+}
+
+export interface BookListQuery {
+  ageGroup?: 'all' | AgeGroup
+  type?: 'all' | 'free' | 'paid'
+  keyword?: string
+}
